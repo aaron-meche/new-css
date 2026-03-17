@@ -29,6 +29,8 @@ class NSS {
         this.txt = readFileText(this.path)
         this.txtLine = this.txt.split("\n")
         this.level = 0
+        this.layers = []
+        this.map = {}
         this.css = []
     }
 
@@ -36,25 +38,43 @@ class NSS {
         for (let i = 0; i < this.txtLine.length; i++) {
             this.processLine(this.txtLine[i].trim())
         }
+        console.log(this.map.length)
+        for (let i = 0; i < Object.keys(this.map).length; i++) {
+            this.css.push(Object.keys(this.map)[i] + "{")
+            this.css.push(Object.values(this.map)[i].join("\n"))
+            this.css.push("}")
+        }
+        console.log(this.css)
     }
 
     processLine(line) {
         let lastChar = line.split("")[line.length - 1]
+        let mapID = this.layers.join(" ")
+        // New Layer
         if (lastChar == "{") {
-
+            this.layers.push(line.replace("{", ""))
+            this.map[this.layers.join(" ")] = []
         }
+        // Close Layer
         else if (lastChar == "}") {
-
+            this.layers.pop()
         }
-        else  {
-            
+        // Interior Line
+        else if (line.includes(":")) {
+            // if (!this.map[mapID]) this.map[mapID] = []
+            this.map[mapID].push(line)
+            // console.log(this.map)
+            // this.map[this.layers.join(" ")].push(line)
         }
-
-        this.css.push(lastChar)
+        // console.log(this.map)
     }
 
     print() {
         console.log(this.css.join("\n"))
+    }
+
+    output(path) {
+        writeFileText(path, this.css.join("\n"))
     }
 }
 
@@ -64,6 +84,7 @@ function main() {
     let instance = new NSS("./syntax.nss")
     instance.compile()
     instance.print()
+    instance.output("./output.css")
 }
 
 main()

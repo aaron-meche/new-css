@@ -2,7 +2,7 @@
 
 .logo{
     i{
-        margin-right: 0.4rem
+        margin-right: 0.4rem;
     }
 
     padding: 0.4rem 0.8rem;

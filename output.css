@@ -1,0 +1,10 @@
+.logo{
+padding: 0.4rem 0.8rem;
+}
+.logo i{
+margin-right: 0.4rem;
+}
+.logo :hover{
+background: var(--l1);
+outline: solid 1pt var(--l3);
+}
