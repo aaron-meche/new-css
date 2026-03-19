@@ -1,5 +1,9 @@
-// nss programming language
+// 
+// Rue Programming Language
+// Compiler
+//
 // by Aaron Meche
+//
 import fs, { read } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -24,7 +28,7 @@ function writeFileText(filePath, fileContent) {
     fs.writeFileSync(filePath, fileContent)
 }
 
-export class NSS {
+export class RueFile {
     path = null     // local path reference to input .nss file
     txt = null      // raw text string of read input file
     txtLine = null  // array of raw text split by line
@@ -92,11 +96,3 @@ export class NSS {
     getCSS() { return this.css.join("\n") }
     output(path) { writeFileText(path, this.css.join("\n")) }
 }
-
-// Program
-// function main() {
-//     let instance = new NSS("./syntax.nss", "./output.css")
-//     instance.output("./output.css")
-// }
-
-// main()

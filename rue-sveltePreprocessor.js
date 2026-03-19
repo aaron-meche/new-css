@@ -1,15 +1,19 @@
-// svelte preprocessor for nss programming language
+// 
+// Rue Programming Language
+// Svelte Preprocessor
+//
 // by Aaron Meche
-import { NSS } from './nss-compiler.js'
+//
+import { RueFile } from './rue-compiler.js'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-export function preprocessNSS() {
+export function preprocessRue() {
     return {
         style({ content, attributes }) {
-            if (attributes.lang !== 'nss') return
-            const compiler = new NSS()
+            if (attributes.lang !== 'rue') return
+            const compiler = new RueFile()
             compiler.feed(content)
             const css = compiler.getCSS()
 
