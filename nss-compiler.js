@@ -1,4 +1,5 @@
-
+// nss programming language
+// by Aaron Meche
 import fs, { read } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -6,7 +7,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __sysDir = path.dirname(__filename);
 
-//
+
 // Read File Text Content
 function readFileText(filePath) { 
     try {
@@ -17,13 +18,13 @@ function readFileText(filePath) {
         return ""
     }
 }
-//
+
 // Write File Text Content
 function writeFileText(filePath, fileContent) {
     fs.writeFileSync(filePath, fileContent)
 }
 
-class NSS {
+export class NSS {
     path = null     // local path reference to input .nss file
     txt = null      // raw text string of read input file
     txtLine = null  // array of raw text split by line
@@ -42,8 +43,14 @@ class NSS {
     }
 
     // If filepath was not provided initially
-    run(filepath) {
-        constructor(filepath)
+    run(filepath) { constructor(filepath) }
+
+    // Force feed text instead of filepath
+    feed(text) {
+        this.txt = text
+        this.txtLine = this.txt.split("\n")
+        this.parse()
+        this.compile()
     }
 
     // Iterate and process all lines
@@ -81,16 +88,15 @@ class NSS {
         }
     }
 
-
     print() { console.log(this.css.join("\n")) }
+    getCSS() { return this.css.join("\n") }
     output(path) { writeFileText(path, this.css.join("\n")) }
 }
 
-//
 // Program
-function main() {
-    let instance = new NSS("./syntax.nss", "./output.css")
-    instance.output("./output.css")
-}
+// function main() {
+//     let instance = new NSS("./syntax.nss", "./output.css")
+//     instance.output("./output.css")
+// }
 
-main()
+// main()
