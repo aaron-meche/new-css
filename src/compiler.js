@@ -76,15 +76,25 @@ export class RueFile {
     // Interpret each line, building map
     processLine(line) {
         let lastChar = line.split("")[line.length - 1]
+        let firstWord = line.split(" ")[0]
         let mapID = () => { return this.layers.join(" ")?.replaceAll(" :", ":") }
+        // Function Declaration
+        if (firstWord == "func") {
+            this.css.push("/* function decl */")
+        }
         // Open a Layer ... [ident] {
-        if (lastChar == "{") {
+        else if (lastChar == "{") {
             this.layers.push(line.replace("{", ""))
             this.map[mapID()] = []
         }
         // Close Layer ... }
         else if (lastChar == "}") {
             this.layers.pop()
+        }
+        // Define Variable
+        else if (firstWord == "def") {
+            if (!this.map[":root"]) this.map[":root"] = [] 
+            this.map[":root"].push(line.replace("def ", "--"))
         }
         // Interior Line ... [attr]: [val]
         else if (line.includes(":")) {

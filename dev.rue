@@ -1,1 +1,36 @@
 
+body{
+    margin: 0;
+    background: black;
+    color: white;
+}
+
+func getLayer() {}
+
+def bg: rgb(20, 20, 20);
+def l0: rgb(28, 28, 28);
+def l1: rgb(36, 36, 36);
+def l2: rgb(44, 44, 44);
+def l3: rgb(52, 52, 52);
+
+.module{
+    padding: 1.6rem;
+    margin: 1.6rem;
+    background: rgb(20,20,20);
+    text-align: center;
+    border-radius: 0.4rem;
+    cursor: pointer;
+
+    :hover{
+        background: rgb(40,40,40);
+    }
+
+    .title{
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .description{
+        opacity: 0.75;
+    }
+}
