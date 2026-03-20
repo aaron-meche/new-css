@@ -1,9 +1,9 @@
 
-body{
-    margin: 0;
-    background: var(--l0);
-    color: white;
-}
+// body{
+//     margin: 0;
+//     background: var(--l0);
+//     color: white;
+// }
 
 func getLayer(layer) {
     let base = 20
@@ -14,29 +14,27 @@ func getLayer(layer) {
     return `rgb(${r}, ${g}, ${b})`
 }
 
-def l0: getLayer(0)
-def l1: getLayer(1)
-def l2: getLayer(2)
-def l3: getLayer(3)
+// def l0: { getLayer(0) }
+def l0: rgb(20, 20, 20);
 
-.module{
-    padding: 1.6rem;
-    margin: 1.6rem;
-    background: var(--l1);
-    text-align: center;
-    border-radius: 0.4rem;
-    cursor: pointer;
+// .module{
+//     padding: 1.6rem;
+//     margin: 1.6rem;
+//     background: var(--l1);
+//     text-align: center;
+//     border-radius: 0.4rem;
+//     cursor: pointer;
 
-    :hover{
-        background: var(--l2);
-    }
+//     :hover{
+//         background: var(--l2);
+//     }
 
-    .title{
-        font-size: 1.5rem;
-        font-weight: 600;
-    }
+//     .title{
+//         font-size: 1.5rem;
+//         font-weight: 600;
+//     }
 
-    .description{
-        opacity: 0.75;
-    }
-}
+//     .description{
+//         opacity: 0.75;
+//     }
+// }

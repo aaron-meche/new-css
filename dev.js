@@ -13,6 +13,5 @@ function main() {
 }
 
 setInterval(() => {
-    console.log("Rerunning...")
     main()
 }, 2000)

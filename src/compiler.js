@@ -87,10 +87,11 @@ export class RueFile {
     // Resolve variable / function calls
     resolveValue(val) {
         if (val.split(" ")[0] == "def") {
-            val = val.replace("def ", "--")
+            val = val?.replace("def ", "--")
         }
-        if (val.includes("(") && val.includes(")")) {
-            
+        if (val.includes("{") && val.includes("}")) {
+            let evalStr = val.slice(val.indexOf('{') + 1, val.lastIndexOf('}')).trim()
+            console.log(eval(evalStr))
         }
         return val
     }
@@ -109,7 +110,7 @@ export class RueFile {
                 this.funcBody.push(line)
             }
             // Close function
-            else if (lastChar == "}") {
+            else if (line == "}") {
                 // If closing nested function
                 if (this.funcDepth > 0) {
                     this.funcDepth--
@@ -141,26 +142,28 @@ export class RueFile {
         }
         // Style Capture Mode
         else {
-            // Function Declaration
+            // Handle Comments
+            if (firstWord == "//") return
+            // Function Declaration ... func funcName(param) {
             if (firstWord == "func") {
                 this.inFunc = true
                 this.funcName = line.replace("func ", "").split("(")[0]
                 this.funcParams = [line.split("(")[1].split(")")[0]]
             }
-            // Open a Layer ... [ident] {
+            // Open a Layer ... div {
             else if (lastChar == "{") {
                 this.layers.push(line.replace("{", ""))
                 this.map[mapID()] = []
             }
             // Close Layer ... }
-            else if (lastChar == "}") {
+            else if (line == "}") {
                 this.layers.pop()
             }
-            // Define Variable
+            // Define Variable ... def Var: Val
             else if (firstWord == "def") {
                 this.map[":root"].push(this.resolveValue(line))
             }
-            // Interior Line ... [attr]: [val]
+            // Interior Line ... attr: val
             else if (line.includes(":")) {
                 let split = line.split(": ")
                 let key = split[0]
@@ -170,6 +173,7 @@ export class RueFile {
                 }
                 this.map[mapID()].push(this.resolveValue(line))
             }
+            // Comments ... //
         }
         
     }
