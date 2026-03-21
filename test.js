@@ -33,4 +33,4 @@ function main(testToRun = "all") {
 
 }
 
-main("dev")
+main("gamesage")

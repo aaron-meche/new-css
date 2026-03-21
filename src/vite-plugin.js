@@ -1,6 +1,6 @@
 // vite plugin for nss programming language
 // by Aaron Meche
-import { RueFile } from "./rue-compiler"
+import { RueFile } from "./compiler.js"
 import path from 'path'
 import fs from 'fs'
 
@@ -10,7 +10,7 @@ export default function ruePlugin() {
         enforce: 'pre',
 
         resolveId(id, importer) {
-            if (id.endsWith('.rue')) {
+            if (id.endsWith('. rue')) {
                 return path.resolve(path.dirname(importer), id)
             }
         },
@@ -21,16 +21,20 @@ export default function ruePlugin() {
             const compiler = new RueFile(id)
             const css = compiler.getCSS()
 
-            return { code: css, map: null }
-        },
-
-        load(id) {
-            if (!id.endsWith('.rue')) return null
-
-            const compiler = new RueFile(id)
-            const css = compiler.getCSS()
-
-            return { code: css, map: null }
+            return { 
+                code: `
+                if (typeof document !== 'undefined') {
+                    const __id = ${JSON.stringify(id)};
+                    let el = document.querySelector(\`style[data-rue="\${__id}"]\`)
+                    if (!el) {
+                    el = document.createElement('style')
+                    el.setAttribute('data-rue', __id)
+                    document.head.appendChild(el)
+                    }
+                    el.textContent = ${JSON.stringify(css)};
+                }`, 
+                map: null 
+            }
         },
 
         handleHotUpdate({ file, server }) {

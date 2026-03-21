@@ -186,9 +186,9 @@ export class RueFile {
                 this.funcSignature = this.#handleFunctionCalls(line, true)
             } // New Layer
             else if (lastChar == "{") {
+                console.log(line)
                 this.layers.push(line.replace("{", ""))
-                if (!this.map[mapID()])
-                    this.map[mapID()] = []
+                this.map[mapID()] = []
             } // Close Layer
             else if (line == "}") {
                 this.layers.pop()
@@ -205,7 +205,4 @@ export class RueFile {
     print() { console.log(this.css.join("\n")) }
     getCSS() { return this.css.join("\n") }
     output(path) { writeFileText(path, this.css.join("\n")) }
-
-
-
 }
