@@ -7,7 +7,6 @@
 import fs, { read } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { parseArgs } from 'util';
 
 const __filename = fileURLToPath(import.meta.url);
 const __sysDir = path.dirname(__filename);
@@ -18,8 +17,7 @@ function readFileText(filePath) {
         const content = fs.readFileSync(filePath, 'utf8');
         return content;
     } catch (error) {
-        console.error('Error reading file:', error);
-        return ""
+        throw new Error(error)
     }
 }
 
@@ -37,8 +35,7 @@ export class RueFile {
     css = []
 
     inFunc = false
-    funcName = null
-    funcParams = []
+    funcSignature = null
     funcBody = []
     funcDepth = 0
 
@@ -79,19 +76,10 @@ export class RueFile {
         }
     }
 
-    // Call Function from saved func map
-    #callFunction(name, args) {
-        if (!this.func[name]) this.css.push("/* Error! Function " + name + " undefined */")
-        const result = this.func[name](...args)
-        return String(result)
-    }
-
     #handleFunctionCalls(str, returnExtractedCall) {
         let openParen = str.indexOf("(")
         let funcName = ""
         let paramStr = ""
-        let indexOfCallFirstChar = null
-        let indexOfCallLastChar = null
         // Capture function name
         for (let i = openParen; i > 0; --i) {
             let prevChar = str[i - 1]
@@ -99,7 +87,6 @@ export class RueFile {
                 funcName = prevChar + funcName
             } 
             else {
-                indexOfCallFirstChar = i
                 break
             }
         }
@@ -110,43 +97,42 @@ export class RueFile {
                 paramStr += nextChar
             } 
             else {
-                indexOfCallLastChar = i
                 break
             }
         }
+        // Fetch function from func map
         let func = this.func?.[funcName]
         let funcStr = funcName + "(" + paramStr + ")"
         if (func) {
-            str = str.replace(funcStr, func(paramStr))
-            console.log(func(paramStr))
+            try {
+                let value = func(...paramStr?.split(","))
+                str = str.replace(funcStr, value)
+                if (str.includes("(") && str.includes(")")) {
+                    str = this.#resolveString(str)
+                }
+            }
+            catch (error) {
+                throw new Error(error)
+            }
         }
-
+        // optionally return func signature object
         if (returnExtractedCall) {
-            if (paramStr.includes(",")) {
-                paramStr = paramStr.split(",")
-            }
-            else {
-                paramStr = [paramStr]
-            }
             return {
                 name: funcName,
-                params: paramStr
+                params: paramStr?.split(",")
             }
         }
-        
         return str
     }
 
-    // Handle func and var functionality
+    // Handle var definitions + function calls
     #resolveString(line) {
         let charSplit = line.split("")
         let wordSplit = line.split(" ")
-        
         // Variable Definition
         if (wordSplit[0] == "def") {
             line = line?.replace("def ", "--")
         }
-
         // Function Call
         if (charSplit.includes("(") && charSplit.includes(")")) {
             line = this.#handleFunctionCalls(line)
@@ -170,26 +156,21 @@ export class RueFile {
             // Close function
             else if (line == "}") {
                 // If closing nested function
-                if (this.funcDepth > 0) {
+                if (this.funcDepth != 0) {
                     this.funcDepth--
                     this.funcBody.push(line)
                 }
                 // If closing main function
                 else {
-                    const body = this.funcBody.join("\n")
-                    const params = this.funcParams
-                    const name = this.funcName
                     try {
-                        this.func[name] = new Function(...params, body)
+                        this.func[this.funcSignature.name] = new Function(...this.funcSignature.params, this.funcBody.join("\n"))
                     }
                     catch (error) {
                         throw new Error(error)
                     }
                     this.inFunc = false
-                    this.funcName = null
-                    this.funcParams = []
+                    this.funcSignature = null
                     this.funcBody = []
-                    this.funcDepth = 0
                 }
             }
             // Add new line to function
@@ -201,14 +182,13 @@ export class RueFile {
         else {
             if (firstWord == "//") return
             if (firstWord == "func") {
-                let funcSignature = this.#handleFunctionCalls(line, true)
                 this.inFunc = true
-                this.funcName = funcSignature.name
-                this.funcParams = funcSignature.params
+                this.funcSignature = this.#handleFunctionCalls(line, true)
             } // New Layer
             else if (lastChar == "{") {
                 this.layers.push(line.replace("{", ""))
-                this.map[mapID()] = []
+                if (!this.map[mapID()])
+                    this.map[mapID()] = []
             } // Close Layer
             else if (line == "}") {
                 this.layers.pop()
@@ -225,4 +205,7 @@ export class RueFile {
     print() { console.log(this.css.join("\n")) }
     getCSS() { return this.css.join("\n") }
     output(path) { writeFileText(path, this.css.join("\n")) }
+
+
+
 }

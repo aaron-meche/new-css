@@ -15,12 +15,18 @@ func getColor(r, g, b) {
     return `rgb(${r}, ${g}, ${b})`
 }
 
+func getPadding(rem) {
+    return rem + "rem"
+}
+
 // def l0: { getLayer(0) }
 def l0: rgb(20, 20, 20);
 def l1: getLayer(1);
 def l2: getLayer(2);
 def l3: getLayer(3);
-def red: getColor(255, 0, 0);
+def inlinePad: getPadding(4);
+def blockPad: getPadding(1.6);
+def pad: getPadding(4) getPadding(1.6) getPadding(4) getPadding(4);
 
 .module{
     padding: 1.6rem;

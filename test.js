@@ -28,7 +28,7 @@ function main(testToRun = "all") {
     }
     else {
         let rueInstance = new RueFile(`./test/${testToRun}.rue`)
-        rueInstance.output(`./test-output/${testToRun}.css`)
+        rueInstance.output(`./output/${testToRun}.css`)
     }
 
 }

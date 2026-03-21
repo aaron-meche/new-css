@@ -3,7 +3,9 @@
 	--l1: rgb(28, 28, 28);
 	--l2: rgb(36, 36, 36);
 	--l3: rgb(44, 44, 44);
-	--red: rgb(255, 0, 0, undefined, undefined);
+	--inlinePad: 4rem;
+	--blockPad: 1.6rem;
+	--pad: 4rem 1.6rem 4rem 4rem;
 }
 .module{
 	padding: 1.6rem;
