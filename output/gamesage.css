@@ -1,82 +1,15 @@
 :root{
 	--hue: 240;
 	--sat: 8%;
-	--strt: 94%;
+	--strt: 6%;
 	--diff: -6%;
-	--accent: hsl(var(--hue), 48%, 48%);
-	--accent-transparent: hsl(var(--hue), 48%, 48%, 40%);
-	--true-accent: hsl(255, 89%, 64%);
-	--contrast: hsl(var(--hue), 0%, calc(100% - var(--strt)));
-	--contrast-transparent: hsl(var(--hue), 0%, 92%, 40%);
-	--bg: hsl(var(--hue), var(--sat), calc(var(--strt) + (0 * var(--diff))));
-	--bg-transparent: hsl(var(--hue), var(--sat), calc(var(--strt) + (0 * var(--diff))), 40%);
-	--l05: hsl(var(--hue), var(--sat), calc(var(--strt) + (0.5 * var(--diff))));
-	--l1: hsl(var(--hue), var(--sat), calc(var(--strt) + (1 * var(--diff))));
-	--l2: hsl(var(--hue), var(--sat), calc(var(--strt) + (2 * var(--diff))));
-	--l3: hsl(var(--hue), var(--sat), calc(var(--strt) + (3 * var(--diff))));
-	--l4: hsl(var(--hue), var(--sat), calc(var(--strt) + (4 * var(--diff))));
-	--l5: hsl(var(--hue), var(--sat), calc(var(--strt) + (5 * var(--diff))));
-	--l6: hsl(var(--hue), var(--sat), calc(var(--strt) + (6 * var(--diff))));
-	--green: hsl(120, 40%, 80%);
-	--red: hsl(0, 40%, 80%);
-	--inline-moat: 8vw;
+	--bg: hsl(222, 22%, 10%);
 }
-@media (prefers-color-scheme: dark) :root{{
-	--strt: 8%;
-	--diff: 6%;
-	--green: hsl(120, 40%, 20%);
-	--red: hsl(0, 40%, 20%);
-	--accent: hsl(var(--hue), 48%, 64%);
-}
-@media (prefers-color-scheme: dark) :root{ @media (orientation: portrait) {
-	
-}
-@media (prefers-color-scheme: dark) :root{ @media (orientation: portrait) :root{
-	--inline-moat: 4vw;
-}
-@media (prefers-color-scheme: dark) :root{ body{
+body{
 	height: 100%;
 	margin: 0;
 	background: var(--bg);
 	font-size: 1rem;
 	font-family: Figtree;
 	color: var(--contrast);
-}
-@media (prefers-color-scheme: dark) :root{ a,button,input{
-	all: unset;
-	display: block;
-}
-@media (prefers-color-scheme: dark) :root{ .horizontal-scroll{
-	display: flex;
-	background: none;
-	overflow-x: scroll;
-	overflow-y: hidden;
-	font-size: 0;
-	white-space: nowrap;
-}
-@media (prefers-color-scheme: dark) :root{ .horizontal-scroll > *{
-	display: inline-block;
-	font-size: initial;
-}
-@media (prefers-color-scheme: dark) :root{ .horizontal-scroll::-webkit-scrollbar{
-	display: none;
-}
-@media (prefers-color-scheme: dark) :root{ .horizontal-scroll::-moz-progress-bar{
-	display: none;
-}
-@media (prefers-color-scheme: dark) :root{ .alert{
-	padding: 0.8rem 1.2rem;
-	margin-bottom: 1.2rem;
-	background: hsl(0, 50%, 20%, 50%);
-	outline: solid 2pt hsl(0, 50%, 40%);
-	border-radius: 0.4rem;
-	line-height: 1.5;
-}
-@media (prefers-color-scheme: dark) :root{ .warning{
-	padding: 0.8rem 1.2rem;
-	margin-bottom: 1.2rem;
-	background: hsl(30, 50%, 20%, 50%);
-	outline: solid 2pt hsl(30, 50%, 40%);
-	border-radius: 0.4rem;
-	line-height: 1.5;
 }

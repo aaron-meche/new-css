@@ -1,26 +1,41 @@
 def hue: 240;
 def sat: 8%;
-def strt: 94%;
+def strt: 6%;
 def diff: -6%;
 
-def accent: hsl(var(--hue), 48%, 48%);
-def accent-transparent: hsl(var(--hue), 48%, 48%, 40%);
-def true-accent: hsl(255, 89%, 64%);
-def contrast: hsl(var(--hue), 0%, calc(100% - var(--strt)));
-def contrast-transparent: hsl(var(--hue), 0%, 92%, 40%);
-def bg: hsl(var(--hue), var(--sat), calc(var(--strt) + (0 * var(--diff))));
-def bg-transparent: hsl(var(--hue), var(--sat), calc(var(--strt) + (0 * var(--diff))), 40%);
-def l05: hsl(var(--hue), var(--sat), calc(var(--strt) + (0.5 * var(--diff))));
-def l1: hsl(var(--hue), var(--sat), calc(var(--strt) + (1 * var(--diff))));
-def l2: hsl(var(--hue), var(--sat), calc(var(--strt) + (2 * var(--diff))));
-def l3: hsl(var(--hue), var(--sat), calc(var(--strt) + (3 * var(--diff))));
-def l4: hsl(var(--hue), var(--sat), calc(var(--strt) + (4 * var(--diff))));
-def l5: hsl(var(--hue), var(--sat), calc(var(--strt) + (5 * var(--diff))));
-def l6: hsl(var(--hue), var(--sat), calc(var(--strt) + (6 * var(--diff))));
-def green: hsl(120, 40%, 80%);
-def red: hsl(0, 40%, 80%);
+// func getPercentage(value) {
+//     return value + "%"
+// }
 
-def inline-moat: 8vw;
+// func getColor(hue, sat, light) {
+//     return `hsl(${hue}, ${getPercentage(sat)}, ${getPercentage(light)})`
+// }
+
+func getLayer(layer) {
+    let hue = 222;
+    let sat = 22;
+    let satDiff = 5
+    let bright = 10;
+    let brightDiff = 5
+    return `hsl(${hue}, ${sat + satDiff * layer}%, ${bright + brightDiff * layer}%)`
+    // return getColor(hue, sat + satDiff * layer, bright + brightDiff * layer)
+}
+
+def bg: getLayer(0);
+// def l05: getLayer(0.5);
+// def l1: getLayer(1);
+// def l2: getLayer(2);
+// def l3: getLayer(3);
+// def l4: getLayer(4);
+// def l5: getLayer(5);
+// def l6: getLayer(6);
+// def soft-accent: hsl(222, 50%, 40%);
+// def accent: hsl(222, 75%, 50%);
+// def bright-accent: hsl(222, 75%, 65%);
+// def warning: #ca0000;
+// def contrast: white;
+
+// def inline-moat: 8vw;
 
 body{
     height: 100%;
@@ -31,47 +46,47 @@ body{
     color: var(--contrast);
 }
 
-a,button,input{
-    all: unset;
-    display: block;
-}
+// a,button,input{
+//     all: unset;
+//     display: block;
+// }
 
-.horizontal-scroll{
-    display: flex;
-    background: none;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    font-size: 0;
-    white-space: nowrap;
-}
-.horizontal-scroll > *{
-    display: inline-block;
-    font-size: initial;
-}
-.horizontal-scroll::-webkit-scrollbar{
-    display: none;
-}
-.horizontal-scroll::-moz-progress-bar{
-    display: none;
-}
+// .horizontal-scroll{
+//     display: flex;
+//     background: none;
+//     overflow-x: scroll;
+//     overflow-y: hidden;
+//     font-size: 0;
+//     white-space: nowrap;
+// }
+// .horizontal-scroll > *{
+//     display: inline-block;
+//     font-size: initial;
+// }
+// .horizontal-scroll::-webkit-scrollbar{
+//     display: none;
+// }
+// .horizontal-scroll::-moz-progress-bar{
+//     display: none;
+// }
 
 
-/* Red Alert */
-.alert{
-    padding: 0.8rem 1.2rem;
-    margin-bottom: 1.2rem;
-    background: hsl(0, 50%, 20%, 50%);
-    outline: solid 2pt hsl(0, 50%, 40%);
-    border-radius: 0.4rem;
-    line-height: 1.5;
-}
+// /* Red Alert */
+// .alert{
+//     padding: 0.8rem 1.2rem;
+//     margin-bottom: 1.2rem;
+//     background: hsl(0, 50%, 20%, 50%);
+//     outline: solid 2pt hsl(0, 50%, 40%);
+//     border-radius: 0.4rem;
+//     line-height: 1.5;
+// }
 
-/* Orange Warning */
-.warning{
-    padding: 0.8rem 1.2rem;
-    margin-bottom: 1.2rem;
-    background: hsl(30, 50%, 20%, 50%);
-    outline: solid 2pt hsl(30, 50%, 40%);
-    border-radius: 0.4rem;
-    line-height: 1.5;
-}
+// /* Orange Warning */
+// .warning{
+//     padding: 0.8rem 1.2rem;
+//     margin-bottom: 1.2rem;
+//     background: hsl(30, 50%, 20%, 50%);
+//     outline: solid 2pt hsl(30, 50%, 40%);
+//     border-radius: 0.4rem;
+//     line-height: 1.5;
+// }
