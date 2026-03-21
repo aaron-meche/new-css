@@ -75,98 +75,6 @@ export class RueFile {
         }
     }
 
-    #extractFunctionCall(str, indexOfLParen) {
-        if (!str.includes("(")) return -1
-        if (indexOfLParen < 0) return -1
-        if (indexOfLParen >= str.length - 1) return -1
-        if (!indexOfLParen) indexOfLParen = str.indexOf("(")
-        let funcName = ""
-        let paramStr = ""
-        // Capture function name
-        for (let i = indexOfLParen; i > 0; --i) {
-            let prevChar = str[i - 1]
-            if (prevChar != " ") {
-                funcName = prevChar + funcName
-            } 
-            else {
-                break
-            }
-        }
-        // Capture function parameters
-        for (let i = indexOfLParen; i < str.length; ++i) {
-            let nextChar = str[i + 1]
-            if (nextChar != ")") {
-                paramStr += nextChar
-            } 
-            else {
-                break
-            }
-        }
-        return {
-            name: funcName,
-            params: paramStr?.split(",")
-        }
-    }
-
-    // in development
-    #handleInteriorJavascriptCalls(body) {
-        for (let i = 0; i < body.length; i++) {
-            let found = this.#extractFunctionCall(body[i])
-            if (this.#func?.[found.name]) {
-                const foundFuncObj = this.#func[found.name]
-                // console.log(foundFuncObj.body)
-                const contextStr = `const ${foundFuncObj.name} = (${foundFuncObj.params.join(",")}) => { ${this.handleInteriorJavascriptCalls(foundFuncObj.body)} }`
-                // console.log(this.#handleDefinedFunctionCalls(foundFuncObj.body))
-                body.unshift(contextStr)
-            }
-        }
-        return body
-    }
-
-    #handleFunctionCalls(str, returnExtractedCall) {
-        let extractedCall = this.#extractFunctionCall(str)
-        let funcName = extractedCall.name
-        let parameters = extractedCall.params
-        // Fetch function from func map
-        let func = this.#func?.[funcName]
-        let funcStr = funcName + "(" + parameters + ")"
-        if (func) {
-            try {
-                let value = func.function(...parameters)
-                str = str.replace(funcStr, value)
-                if (str.includes("(") && str.includes(")")) {
-                    str = this.#resolveString(str)
-                }
-            }
-            catch (error) {
-                console.error("handleFunctionCalls " + error.message)
-            }
-        }
-        // optionally return func signature object
-        if (returnExtractedCall) {
-            return {
-                name: funcName,
-                params: parameters
-            }
-        }
-        return str
-    }
-
-    // Handle var definitions + function calls
-    #resolveString(line) {
-        let charSplit = line.split("")
-        let wordSplit = line.split(" ")
-        // Variable Definition
-        if (wordSplit[0] == "def") {
-            line = line?.replace("def ", "--")
-        }
-        // Function Call
-        if (charSplit.includes("(") && charSplit.includes(")")) {
-            line = this.#handleFunctionCalls(line)
-        }
-        return line
-    }
-
     // Interpret each line, building map
     #processLine(line) {
         let lastChar = line.split("")[line.length - 1]
@@ -191,17 +99,15 @@ export class RueFile {
                 else {
                     try {
                         // this.#funcBody = this.#handleInteriorJavascriptCalls(this.#funcBody)
-                        console.log(this.#funcBody)
                         this.#func[this.#funcSignature.name] = {
                             name: this.#funcSignature.name,
                             params: this.#funcSignature.params,
                             body: this.#funcBody,
                             function: new Function(...this.#funcSignature.params, this.#funcBody.join("\n")),
                         }
-                        // console.log(this.#funcSignature.name, this.#funcBody)
                     }
                     catch (error) {
-                        console.error("closing function definition " + error.message)
+                        console.error("add func: ", error)
                     }
                     this.#inFunc = false
                     this.#funcSignature = null
@@ -218,7 +124,7 @@ export class RueFile {
             if (firstWord == "//") return
             if (firstWord == "func") {
                 this.#inFunc = true
-                this.#funcSignature = this.#extractFunctionCall(line)
+                this.#funcSignature = this.#extractFunctionCalls(line)[0]
             } // New Layer
             else if (lastChar == "{") {
                 this.#layers.push(line.replace("{", ""))
@@ -234,6 +140,104 @@ export class RueFile {
                 this.#map[mapID()].push(this.#resolveString(line))
             }
         }
+    }
+
+    // Handle var definitions + function calls
+    #resolveString(line) {
+        let charSplit = line.split("")
+        let wordSplit = line.split(" ")
+        // Variable Definition
+        if (wordSplit[0] == "def") {
+            line = line?.replace("def ", "--")
+        }
+        // Function Call
+        if (charSplit.includes("(") && charSplit.includes(")")) {
+            line = this.#handleFunctionCalls(line)
+        }
+        return line
+    }
+
+    #extractFunctionCalls(str) {
+        if (!str.includes("(")) return null
+        let numOfLParen = str.split("(").length - 1
+        let indexOfLParen = null
+        let functions = []
+        let currFunc = {
+            name: "",
+            params: ""
+        }
+        for (let i = 0; i < numOfLParen; i++) {
+            indexOfLParen = str.indexOf("(", i)
+            // Capture BEHIND (function name)
+            // LPAREN until space
+            for (let i = indexOfLParen; i > 0; --i) {
+                let prevChar = str[i - 1]
+                if (prevChar != " ") {
+                    currFunc.name = prevChar + currFunc.name
+                } 
+                else {
+                    break
+                }
+            }
+            // Capture AHEAD (function parameters)
+            // LPAREN until RPAREN )
+            for (let i = indexOfLParen; i < str.length; ++i) {
+                let nextChar = str[i + 1]
+                if (nextChar != ")") {
+                    currFunc.params += nextChar
+                } 
+                else {
+                    break
+                }
+            }
+            currFunc.params = currFunc.params?.split(",")
+            functions.push(currFunc)
+            currFunc = {
+                name: "",
+                params: ""
+            }
+        }
+        return functions
+    }
+
+    #handleFunctionCalls(str) {
+        let extractedCalls = this.#extractFunctionCalls(str)
+        if (!extractedCalls) return str
+        for (let i = 0; i < extractedCalls.length; i++) {
+            let funcName = extractedCalls[i].name
+            let parameters = extractedCalls[i].params
+            // Fetch function from func map
+            let func = this.#func?.[funcName]
+            let funcCallStr = funcName + "(" + parameters + ")"
+            if (func) {
+                try {
+                    let funcCallValue = func.function(...parameters)
+                    str = str.replace(funcCallStr, funcCallValue)
+                    if (str.includes("(") && str.includes(")")) {
+                        str = this.#handleFunctionCalls(str)
+                    }
+                }
+                catch (error) {
+                    console.error("handleFunctionCalls " + error.message)
+                }
+            }
+        }
+        return str
+    }
+
+    // in development
+    #handleInteriorJavascriptCalls(body) {
+        for (let i = 0; i < body.length; i++) {
+            let found = this.#extractFunctionCalls(body[i])[0]
+            if (this.#func?.[found.name]) {
+                const foundFuncObj = this.#func[found.name]
+                // console.log(foundFuncObj.body)
+                const contextStr = `const ${foundFuncObj.name} = (${foundFuncObj.params.join(",")}) => { ${this.handleInteriorJavascriptCalls(foundFuncObj.body)} }`
+                // console.log(this.#handleDefinedFunctionCalls(foundFuncObj.body))
+                body.unshift(contextStr)
+            }
+        }
+        return body
     }
 
     print() { console.log(this.#css.join("\n")) }

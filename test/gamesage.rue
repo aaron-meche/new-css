@@ -17,14 +17,15 @@ func getLayer(layer) {
     let satDiff = 5
     let bright = 10;
     let brightDiff = 5
+    // return "rgb(0,0,0)"
     return `hsl(${hue}, ${sat + satDiff * layer}%, ${bright + brightDiff * layer}%)`
     // return getColor(hue, sat + satDiff * layer, bright + brightDiff * layer)
 }
 
 def bg: getLayer(0);
 // def l05: getLayer(0.5);
-// def l1: getLayer(1);
-// def l2: getLayer(2);
+def l1: getLayer(1);
+def l2: getLayer(2);
 // def l3: getLayer(3);
 // def l4: getLayer(4);
 // def l5: getLayer(5);
@@ -44,6 +45,37 @@ body{
     font-size: 1rem;
     font-family: Figtree;
     color: var(--contrast);
+}
+
+// <content>
+//     .logo
+//         img src="logo.png"
+//         Rue Lang
+//     .top-navbar
+//         .nav-item
+//             i.fa-solid.fa-wand
+//             "Suggested"
+//         .nav-item
+//             i.fa-solid.fa-gear
+//             "Settings"
+//         .nav-item
+//             i.fa-solid.fa-user
+//             "Profile"
+//     .page-content
+//         .heading
+//             "What is Rue Programming Language?"
+//         .body
+//             "Rue Programming Language is a programming language"
+// </content>
+
+.top-navbar{
+    display: grid;
+    grid-template-columns: auto min-content;
+}
+
+.logo{
+    display: grid;
+    gap: 0.4rem;
 }
 
 // a,button,input{

@@ -4,6 +4,8 @@
 	--strt: 6%;
 	--diff: -6%;
 	--bg: hsl(222, 22%, 10%);
+	--l1: hsl(222, 27%, 15%);
+	--l2: hsl(222, 32%, 20%);
 }
 body{
 	height: 100%;
@@ -12,4 +14,12 @@ body{
 	font-size: 1rem;
 	font-family: Figtree;
 	color: var(--contrast);
+}
+.top-navbar{
+	display: grid;
+	grid-template-columns: auto min-content;
+}
+.logo{
+	display: grid;
+	gap: 0.4rem;
 }
