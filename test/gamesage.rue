@@ -7,9 +7,9 @@ def diff: -6%;
 //     return value + "%"
 // }
 
-// func getColor(hue, sat, light) {
-//     return `hsl(${hue}, ${getPercentage(sat)}, ${getPercentage(light)})`
-// }
+func getColor(hue, sat, light) {
+    return `hsl(${hue}, ${sat}%, ${light}%)`
+}
 
 func getLayer(layer) {
     let hue = 222;
@@ -18,14 +18,23 @@ func getLayer(layer) {
     let bright = 10;
     let brightDiff = 5
     // return "rgb(0,0,0)"
-    return `hsl(${hue}, ${sat + satDiff * layer}%, ${bright + brightDiff * layer}%)`
-    // return getColor(hue, sat + satDiff * layer, bright + brightDiff * layer)
+    // return `hsl(${hue}, ${sat + satDiff * layer}%, ${bright + brightDiff * layer}%)`
+    return getColor(hue, sat + satDiff * layer, bright + brightDiff * layer)
 }
 
-def bg: getLayer(0);
+func get2() {
+    return 2
+}
+
+func get4() {
+    return 4
+}
+
+// def bg: getLayer(0);
 // def l05: getLayer(0.5);
-def l1: getLayer(1);
-def l2: getLayer(2);
+// def l1: getLayer(1);
+def l2: getLayer(2) getLayer(4);
+def num: get2() get4();
 // def l3: getLayer(3);
 // def l4: getLayer(4);
 // def l5: getLayer(5);
@@ -41,10 +50,10 @@ def l2: getLayer(2);
 body{
     height: 100%;
     margin: 0;
-    background: var(--bg);
+    // background: var(--bg);
     font-size: 1rem;
     font-family: Figtree;
-    color: var(--contrast);
+    // color: var(--contrast);
 }
 
 // <content>
