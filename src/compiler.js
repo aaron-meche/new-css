@@ -30,6 +30,7 @@ export class RueFile {
     #txt = null
     #layers = []
     #map = { ":root": [] }
+    #var = {}
     #func = {}
     #css = []
 
@@ -78,6 +79,7 @@ export class RueFile {
     // Interpret each line, building map
     #processLine(line) {
         let lastChar = line.split("")[line.length - 1]
+        let firstChar = line.split("")[0]
         let firstWord = line.split(" ")[0]
         let mapID = () => { return this.#layers.join(" ")?.replaceAll(" :", ":") }
         
@@ -137,6 +139,12 @@ export class RueFile {
             } // Variable Definition
             else if (firstWord == "def") {
                 this.#map[":root"].push(this.#resolveString(line))
+            } // Rue Variables
+            else if (firstChar == "_") {
+                let varName = line.split(":")[0].replaceAll("_", "").trim()
+                let varValue = line.split(":")[1].trim()
+                this.#var[varName] = this.#resolveString(varValue)
+                // this.#var[this.firstWord.re]
             } // Key: Value
             else if (line.includes(":")) {
                 this.#map[mapID()].push(this.#resolveString(line))
@@ -155,6 +163,9 @@ export class RueFile {
         // Function Call
         if (charSplit.includes("(") && charSplit.includes(")")) {
             line = this.#handleFunctionCalls(line)
+        }
+        if (charSplit.includes("_")) {
+            line = this.#handleRueVarCalls(line)
         }
         return line
     }
@@ -239,6 +250,19 @@ export class RueFile {
             // }
         }
         return lineArr
+    }
+
+    #handleRueVarCalls(line) {
+        let curVarName = ""
+        for (let i = line.indexOf("_") + 1; i < line.length; i++) {
+            if (line[i] == "_") break
+            curVarName += line[i]
+        }
+        line = line.replace("_" + curVarName + "_", this.#var[curVarName])
+        if (line.includes("_")) 
+            return this.#handleRueVarCalls(line)
+        else 
+            return line
     }
 
     print() { console.log(this.#css.join("\n")) }

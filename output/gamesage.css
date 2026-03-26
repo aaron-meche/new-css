@@ -1,10 +1,8 @@
 :root{
-	--hue: 240;
+	--hue: 55;
 	--sat: 8%;
 	--strt: 6%;
 	--diff: -6%;
-	--l2: getLayer(2) getLayer(4);
-	--num: 2 4;
 }
 body{
 	height: 100%;
@@ -19,4 +17,12 @@ body{
 .logo{
 	display: grid;
 	gap: 0.4rem;
+}
+.page{
+	
+}
+.page .attr{
+	font-size: 0.8rem;
+	font-weight: 400;
+	opacity: 0.75;
 }
