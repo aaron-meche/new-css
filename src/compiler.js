@@ -205,7 +205,6 @@ export class RueFile {
     #handleFunctionCalls(str) {
         let extractedCalls = this.#extractFunctionCalls(str)
         if (!extractedCalls) return str
-        // console.log(str)
         for (let i = 0; i < extractedCalls.length; i++) {
             let funcName = extractedCalls[i].name
             let parameters = extractedCalls[i].params
@@ -237,15 +236,11 @@ export class RueFile {
                     let contextStr = `const ${foundFunc.name} = (${foundFunc.params}) => {\n${foundFunc.body}\n}`
                     // lineArr = [contextStr, ...lineArr]
                     // lineArr = lineArr.unshift(contextStr)
-                    // console.log(lineArr)
-                    // console.log(contextStr)
                 }
             }
             // if (this.#func?.[found.name]) {
             //     const foundFuncObj = this.#func[found.name]
-            //     // console.log(foundFuncObj.body)
             //     const contextStr = `const ${foundFuncObj.name} = (${foundFuncObj.params.join(",")}) => { ${this.handleInteriorJavascriptCalls(foundFuncObj.body)} }`
-            //     // console.log(this.#handleDefinedFunctionCalls(foundFuncObj.body))
             //     body.unshift(contextStr)
             // }
         }

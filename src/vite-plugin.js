@@ -39,7 +39,6 @@ export default function ruePlugin() {
 
         handleHotUpdate({ file, server }) {
             if (file.endsWith('.rue')) {
-                console.log(`[rue] recompiling: ${file}`)
                 server.ws.send({ type: 'full-reload' })
             }
         }

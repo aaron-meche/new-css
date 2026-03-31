@@ -1,9 +1,9 @@
 _hue_: 55
 
-def hue: _hue_;
-def sat: 8%;
-def strt: 6%;
-def diff: -6%;
+def hue: _hue_
+def sat: 8%
+def strt: 6%
+def diff: -6%
 
 // func getPercentage(value) {
 //     return value + "%"
@@ -13,6 +13,22 @@ def diff: -6%;
 // func getColor(hue, sat, light) {
 //     return `hsl(${hue}, ${sat}%, ${light}%)`
 // }
+
+
+Display{
+    .logo{
+        i.fa-solid.fa-magic-hat{}
+        "magic app"
+    }
+    .nav-buttons{
+        #each navitems, i{
+            .item{
+                .icon{ i.fa-solid.fa- + navitems[i].icon{} }
+                .label{ "" + navitems[i].label }
+            }
+        }
+    }
+}
 
 func getLayer(layer) {
     let hue = 240;
